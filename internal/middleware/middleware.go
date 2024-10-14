@@ -8,8 +8,9 @@ import (
 	"fmt"
 	"goth/internal/store"
 	"log"
-	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type key string
@@ -32,11 +33,12 @@ func generateRandomString(length int) string {
 	return hex.EncodeToString(bytes)
 }
 
-func CSPMiddleware(next http.Handler) http.Handler {
+func CSPMiddleware() gin.HandlerFunc {
 	// To use the same nonces in all responses, move the Nonces
 	// struct creation to here, outside the handler.
 
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(c *gin.Context) {
+		// return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		// Create a new Nonces struct for every request when here.
 		// move to outside the handler to use the same nonces in all responses
 		nonceSet := Nonces{
@@ -47,31 +49,37 @@ func CSPMiddleware(next http.Handler) http.Handler {
 		}
 
 		// set nonces in context
-		ctx := context.WithValue(r.Context(), NonceKey, nonceSet)
+		// ctx := context.WithValue(r.Context(), NonceKey, nonceSet)
+		c.Set(string(NonceKey), nonceSet)
 		// insert the nonces into the content security policy header
 		cspHeader := fmt.Sprintf("default-src 'self'; script-src 'nonce-%s' 'nonce-%s' ; style-src 'nonce-%s' '%s';",
 			nonceSet.Htmx,
 			nonceSet.ResponseTargets,
 			nonceSet.Tw,
 			nonceSet.HtmxCSSHash)
-		w.Header().Set("Content-Security-Policy", cspHeader)
+		c.Header("Content-Security-Policy", cspHeader)
 
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+		c.Next()
+		// next.ServeHTTP(w, r.WithContext(ctx))
+	}
 }
 
-func TextHTMLMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		next.ServeHTTP(w, r)
-	})
+func TextHTMLMiddleware() gin.HandlerFunc {
+	// return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
+	return func(c *gin.Context) {
+		// w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		c.Next()
+		// next.ServeHTTP(w, r)
+	}
 }
 
 // get the Nonce from the context, it is a struct called Nonces,
 // so we can get the nonce we need by the key, i.e. HtmxNonce
-func GetNonces(ctx context.Context) Nonces {
-	nonceSet := ctx.Value(NonceKey)
-	if nonceSet == nil {
+func GetNonces(c *gin.Context) Nonces {
+	// nonceSet := ctx.Value(NonceKey)
+	nonceSet, exists := c.Get(string(NonceKey))
+	if !exists {
 		log.Fatal("error getting nonce set - is nil")
 	}
 
@@ -84,19 +92,19 @@ func GetNonces(ctx context.Context) Nonces {
 	return nonces
 }
 
-func GetHtmxNonce(ctx context.Context) string {
-	nonceSet := GetNonces(ctx)
+func GetHtmxNonce(c *gin.Context) string {
+	nonceSet := GetNonces(c)
 
 	return nonceSet.Htmx
 }
 
-func GetResponseTargetsNonce(ctx context.Context) string {
-	nonceSet := GetNonces(ctx)
+func GetResponseTargetsNonce(c *gin.Context) string {
+	nonceSet := GetNonces(c)
 	return nonceSet.ResponseTargets
 }
 
-func GetTwNonce(ctx context.Context) string {
-	nonceSet := GetNonces(ctx)
+func GetTwNonce(c *gin.Context) string {
+	nonceSet := GetNonces(c)
 	return nonceSet.Tw
 }
 
@@ -116,28 +124,28 @@ type UserContextKey string
 
 var UserKey UserContextKey = "user"
 
-func (m *AuthMiddleware) AddUserToContext(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (m *AuthMiddleware) AddUserToContext() gin.HandlerFunc {
 
-		sessionCookie, err := r.Cookie(m.sessionCookieName)
+	return func(c *gin.Context) {
+		sessionCookie, err := c.Cookie(m.sessionCookieName)
 
 		if err != nil {
 			fmt.Println("error getting session cookie", err)
-			next.ServeHTTP(w, r)
+			c.Next()
 			return
 		}
 
-		decodedValue, err := b64.StdEncoding.DecodeString(sessionCookie.Value)
+		decodedValue, err := b64.StdEncoding.DecodeString(sessionCookie)
 
 		if err != nil {
-			next.ServeHTTP(w, r)
+			c.Next()
 			return
 		}
 
 		splitValue := strings.Split(string(decodedValue), ":")
 
 		if len(splitValue) != 2 {
-			next.ServeHTTP(w, r)
+			c.Next()
 			return
 		}
 
@@ -150,14 +158,14 @@ func (m *AuthMiddleware) AddUserToContext(next http.Handler) http.Handler {
 		user, err := m.sessionStore.GetUserFromSession(sessionID, userID)
 
 		if err != nil {
-			next.ServeHTTP(w, r)
+			c.Next()
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), UserKey, user)
+		c.Set(string(UserKey), user)
 
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+		c.Next()
+	}
 }
 
 func GetUser(ctx context.Context) *store.User {
@@ -168,3 +176,12 @@ func GetUser(ctx context.Context) *store.User {
 
 	return user.(*store.User)
 }
+
+// func GetUser(c *gin.Context) *store.User {
+// 	user, exists := c.Get(string(UserKey))
+// 	if !exists {
+// 		return nil
+// 	}
+//
+// 	return user.(*store.User)
+// }

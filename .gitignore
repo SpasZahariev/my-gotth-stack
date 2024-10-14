@@ -10,3 +10,6 @@ package.json
 
 #css files
 static/css/style.css
+
+# go stuff
+go.sum
