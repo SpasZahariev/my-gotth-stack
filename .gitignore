@@ -7,3 +7,7 @@ tailwindcss
 node_modules/
 package-lock.json
 package.json
+
+#css files
+static/css/style.min.css
+static/css/style.css
