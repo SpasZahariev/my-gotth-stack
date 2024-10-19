@@ -21,6 +21,8 @@ type Nonces struct {
 	Htmx            string
 	ResponseTargets string
 	Tw              string
+	Clerk           string
+	ClerkSignIn     string
 	HtmxCSSHash     string
 }
 
@@ -45,6 +47,8 @@ func CSPMiddleware() gin.HandlerFunc {
 			Htmx:            generateRandomString(16),
 			ResponseTargets: generateRandomString(16),
 			Tw:              generateRandomString(16),
+			Clerk:           generateRandomString(16),
+			ClerkSignIn:     generateRandomString(16),
 			HtmxCSSHash:     "sha256-pgn1TCGZX6O77zDvy0oTODMOxemn0oj0LeCnQTRj7Kg=",
 		}
 
@@ -52,11 +56,20 @@ func CSPMiddleware() gin.HandlerFunc {
 		// ctx := context.WithValue(r.Context(), NonceKey, nonceSet)
 		c.Set(string(NonceKey), nonceSet)
 		// insert the nonces into the content security policy header
-		cspHeader := fmt.Sprintf("default-src 'self'; script-src 'nonce-%s' 'nonce-%s' ; style-src 'nonce-%s' '%s';",
+		cspHeader := fmt.Sprintf(
+			"default-src 'self'; "+
+				"script-src 'nonce-%s' 'nonce-%s' 'nonce-%s' 'nonce-%s' https://modern-colt-57.clerk.accounts.dev https://img.clerk.com; "+
+				// "style-src 'nonce-%s' '%s' 'unsafe-inline'; "+
+				"style-src 'unsafe-inline'; "+
+				"connect-src 'self' https://modern-colt-57.clerk.accounts.dev; worker-src 'self' blob:; "+
+				"img-src 'self' https://img.clerk.com;",
 			nonceSet.Htmx,
 			nonceSet.ResponseTargets,
-			nonceSet.Tw,
-			nonceSet.HtmxCSSHash)
+			nonceSet.Clerk,
+			nonceSet.ClerkSignIn,
+		// nonceSet.Tw,
+		// nonceSet.HtmxCSSHash
+		)
 		c.Header("Content-Security-Policy", cspHeader)
 
 		c.Next()
@@ -106,6 +119,16 @@ func GetResponseTargetsNonce(c *gin.Context) string {
 func GetTwNonce(c *gin.Context) string {
 	nonceSet := GetNonces(c)
 	return nonceSet.Tw
+}
+
+func GetClerkSignInNonce(c *gin.Context) string {
+	nonceSet := GetNonces(c)
+	return nonceSet.ClerkSignIn
+}
+
+func GetClerkNonce(c *gin.Context) string {
+	nonceSet := GetNonces(c)
+	return nonceSet.Clerk
 }
 
 type AuthMiddleware struct {
