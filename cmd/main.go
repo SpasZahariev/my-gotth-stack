@@ -2,14 +2,15 @@ package main
 
 import (
 	"goth/internal/config"
+	"goth/internal/handlers"
 	database "goth/internal/store/db"
 	"goth/internal/store/dbstore"
-	"goth/internal/templates"
+	// "goth/internal/templates"
 	"os"
 
 	m "goth/internal/middleware"
 
-	"github.com/a-h/templ"
+	// "github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 	// "github.com/go-chi/chi/v5"
 	// "github.com/go-chi/chi/v5/middleware"
@@ -17,10 +18,10 @@ import (
 
 // This function will render teh templ component Into
 // a gin context's Response Writer
-func render(c *gin.Context, status int, template templ.Component) error {
-	c.Status(status)
-	return template.Render(c.Request.Context(), c.Writer)
-}
+// func render(c *gin.Context, status int, template templ.Component) error {
+// 	c.Status(status)
+// 	return template.Render(c.Request.Context(), c.Writer)
+// }
 
 /*
 * Set to production at build time
@@ -70,7 +71,9 @@ func main() {
 	)
 
 	r.GET("/", func(c *gin.Context) {
-		render(c, 200, templates.About())
+		// render(c, 200, templates.About())
+		// render(c, 200, handlers.NewAboutHandler())
+		handlers.NewAboutHandler().ServeHTTP(c)
 	})
 
 	// r.NoRoute(gin.WrapF(handlers.NewNotFoundHandler().ServeHTTP))

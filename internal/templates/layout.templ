@@ -1,25 +1,24 @@
 package templates
 
 import (
-//	"os"
-//	"goth/internal/middleware"
+	"os"
+	m"goth/internal/middleware"
+	"github.com/gin-gonic/gin"
 )
 
-templ header(title string) {
-  <!--
+templ header(c *gin.Context, title string) {
 	<head>
 		<title>{ title }</title>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<script src="static/script/htmx.min.js" nonce={ middleware.GetHtmxNonce(ctx) }></script>
-		<script src="static/script/response-targets.js" nonce={ middleware.GetResponseTargetsNonce(ctx) }></script>
+		<script src="static/script/htmx.min.js" nonce={ m.GetHtmxNonce(c) }></script>
+		<script src="static/script/response-targets.js" nonce={ m.GetResponseTargetsNonce(c) }></script>
 		if os.Getenv("env") == "production" {
-			<link rel="stylesheet" href="static/css/style.min.css" nonce={ middleware.GetTwNonce(ctx) }/>
+			<link rel="stylesheet" href="static/css/style.min.css" nonce={ m.GetTwNonce(c) }/>
 		} else {
-			<link rel="stylesheet" href="static/css/style.css" nonce={ middleware.GetTwNonce(ctx) }/>
+			<link rel="stylesheet" href="static/css/style.css" nonce={ m.GetTwNonce(c) }/>
 		}
 	</head>
-  -->
 }
 
 templ footer() {
@@ -27,7 +26,6 @@ templ footer() {
 }
 
 templ nav() {
-  <!--
 	<nav class="bg-primary-600 p-4">
 		<div class="container flex justify-between">
 			<ol class="flex space-x-4">
@@ -39,27 +37,20 @@ templ nav() {
 				</li>
 			</ol>
 			<ol class="flex space-x-4">
-				if middleware.GetUser(ctx) != nil {
-					<li>
-						<button class="text-gray-200" hx-target="body" hx-swap="innerHTML" hx-post="/logout">Logout</button>
-					</li>
-				} else {
 					<li>
 						<a class="text-gray-200" href="/register">Register</a>
 					</li>
 					<li>
 						<a class="text-gray-200" href="/login">Login</a>
 					</li>
-				}
 			</ol>
 		</div>
 	</nav>
-  -->
 }
 
-templ Layout(contents templ.Component, title string) {
-	@header(title)
-	<body class="bg-gray-500 flex flex-col h-full">
+templ Layout(c *gin.Context, contents templ.Component, title string) {
+	@header(c, title)
+	<body class="bg-oragne-500 flex flex-col h-full">
 		@nav()
 		<main class="flex-1 container ">
 			@contents
