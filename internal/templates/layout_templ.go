@@ -81,7 +81,7 @@ func header(c *gin.Context, title string) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(m.GetClerkNonce(c))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 22, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 16, Col: 270}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -99,7 +99,7 @@ func header(c *gin.Context, title string) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(m.GetTwNonce(c))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 25, Col: 81}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 18, Col: 81}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -117,7 +117,7 @@ func header(c *gin.Context, title string) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(m.GetTwNonce(c))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 27, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 20, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -135,13 +135,13 @@ func header(c *gin.Context, title string) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(m.GetClerkSignInNonce(c))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 29, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/layout.templ`, Line: 22, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">\n      window.addEventListener('load', async function () {\n        await Clerk.load()\n\n        if (Clerk.user) {\n          document.getElementById('app').innerHTML = `<div id=\"user-button\"></div>`\n\n          const userButtonDiv = document.getElementById('user-button')\n\n          Clerk.mountUserButton(userButtonDiv)\n        } else {\n          document.getElementById('app').innerHTML = `<div id=\"sign-in\"></div>`\n\n          const signInDiv = document.getElementById('sign-in')\n\n          Clerk.mountSignIn(signInDiv)\n        }\n      })\n    </script></head>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">\n      window.addEventListener('load', async function () {\n        await Clerk.load()\n\n        if (Clerk.user) {\n          document.getElementById('my-user').innerHTML = `<div id=\"user-button\"></div>`\n\n          const userButtonDiv = document.getElementById('user-button')\n\n          Clerk.mountUserButton(userButtonDiv)\n        } else {\n          document.getElementById('app').innerHTML = `<div id=\"sign-in\"></div>`\n\n          const signInDiv = document.getElementById('sign-in')\n\n          Clerk.mountSignIn(signInDiv)\n        }\n      })\n    </script></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -199,7 +199,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-primary-600 p-4\"><div class=\"container flex justify-between\"><ol class=\"flex space-x-4\"><li><a class=\"text-gray-200\" href=\"/\">Home</a></li><li><a class=\"text-gray-200\" href=\"/about\">About</a></li></ol><ol class=\"flex space-x-4\"><li><a class=\"text-gray-200\" href=\"/register\">Register</a></li><li><a class=\"text-gray-200\" href=\"/login\">Login</a></li></ol></div></nav>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex justify-between items-center\"><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/\">Home</a> <a class=\"text-white hover:text-gray-400\" href=\"/about\">About</a></div><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/register\">Register</a><!-- <a class=\"text-white hover:text-gray-400\" href=\"/login\">Login</a> --><div id=\"my-user\"></div></div></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

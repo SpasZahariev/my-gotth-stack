@@ -60,7 +60,7 @@ func CSPMiddleware() gin.HandlerFunc {
 			"default-src 'self'; "+
 				"script-src 'nonce-%s' 'nonce-%s' 'nonce-%s' 'nonce-%s' https://modern-colt-57.clerk.accounts.dev https://img.clerk.com; "+
 				// "style-src 'nonce-%s' '%s' 'unsafe-inline'; "+
-				"style-src 'unsafe-inline'; "+
+				"style-src 'self' 'unsafe-inline'; "+
 				"connect-src 'self' https://modern-colt-57.clerk.accounts.dev; worker-src 'self' blob:; "+
 				"img-src 'self' https://img.clerk.com;",
 			nonceSet.Htmx,

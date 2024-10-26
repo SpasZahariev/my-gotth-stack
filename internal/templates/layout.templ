@@ -1,9 +1,9 @@
 package templates
 
 import (
-	"os"
-	m"goth/internal/middleware"
 	"github.com/gin-gonic/gin"
+	m "goth/internal/middleware"
+	"os"
 )
 
 templ header(c *gin.Context, title string) {
@@ -13,25 +13,18 @@ templ header(c *gin.Context, title string) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<script src="static/script/htmx.min.js" nonce={ m.GetHtmxNonce(c) }></script>
 		<script src="static/script/response-targets.js" nonce={ m.GetResponseTargetsNonce(c) }></script>
-    <script
-      async
-      crossorigin="anonymous"
-      data-clerk-publishable-key="pk_test_bW9kZXJuLWNvbHQtNTcuY2xlcmsuYWNjb3VudHMuZGV2JA"
-      src="https://modern-colt-57.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-      type="text/javascript"
-      nonce={ m.GetClerkNonce(c) }
-    ></script>
+		<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_bW9kZXJuLWNvbHQtNTcuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://modern-colt-57.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript" nonce={ m.GetClerkNonce(c) }></script>
 		if os.Getenv("env") == "production" {
 			<link rel="stylesheet" href="static/css/style.min.css" nonce={ m.GetTwNonce(c) }/>
 		} else {
 			<link rel="stylesheet" href="static/css/style.css" nonce={ m.GetTwNonce(c) }/>
 		}
-    <script nonce={m.GetClerkSignInNonce(c)}>
+		<script nonce={ m.GetClerkSignInNonce(c) }>
       window.addEventListener('load', async function () {
         await Clerk.load()
 
         if (Clerk.user) {
-          document.getElementById('app').innerHTML = `<div id="user-button"></div>`
+          document.getElementById('my-user').innerHTML = `<div id="user-button"></div>`
 
           const userButtonDiv = document.getElementById('user-button')
 
@@ -53,24 +46,17 @@ templ footer() {
 }
 
 templ nav() {
-	<nav class="bg-primary-600 p-4">
-		<div class="container flex justify-between">
-			<ol class="flex space-x-4">
-				<li>
-					<a class="text-gray-200" href="/">Home</a>
-				</li>
-				<li>
-					<a class="text-gray-200" href="/about">About</a>
-				</li>
-			</ol>
-			<ol class="flex space-x-4">
-					<li>
-						<a class="text-gray-200" href="/register">Register</a>
-					</li>
-					<li>
-						<a class="text-gray-200" href="/login">Login</a>
-					</li>
-			</ol>
+	<nav class="bg-gray-800 p-4">
+		<div class="container mx-auto flex justify-between items-center">
+			<div class="flex space-x-4">
+				<a class="text-white hover:text-gray-400" href="/">Home</a>
+				<a class="text-white hover:text-gray-400" href="/about">About</a>
+			</div>
+			<div class="flex space-x-4">
+				<a class="text-white hover:text-gray-400" href="/register">Register</a>
+				<!-- <a class="text-white hover:text-gray-400" href="/login">Login</a> -->
+				<div id="my-user"></div>
+			</div>
 		</div>
 	</nav>
 }
@@ -80,7 +66,7 @@ templ Layout(c *gin.Context, contents templ.Component, title string) {
 	<body class="bg-sky-700 flex flex-col h-full">
 		@nav()
 		<main class="flex-1 container ">
-      <div id="app"></div>
+			<div id="app"></div>
 			@contents
 		</main>
 		@footer()
