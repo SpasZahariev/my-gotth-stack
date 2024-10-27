@@ -27,6 +27,16 @@ templ header(c *gin.Context, title string) {
         if (Clerk.user) {
           document.getElementById('my-user').innerHTML = `<div id="user-button"></div>`
 
+          // Set the userData in a cookie
+          const userData = {
+            userId: Clerk.user.id,
+            firstName: Clerk.user.firstName,
+            primaryEmail: Clerk.user.primaryEmailAddress.emailAddress
+          };
+
+          document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(userData))}; path=/; secure; samesite=strict`;
+
+
           const userButtonDiv = document.getElementById('user-button')
 
           Clerk.mountUserButton(userButtonDiv)

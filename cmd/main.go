@@ -71,8 +71,9 @@ func main() {
 	)
 
 	r.GET("/", func(c *gin.Context) {
-		// render(c, 200, templates.About())
-		// render(c, 200, handlers.NewAboutHandler())
+		handlers.NewHomeHandler().ServeHTTP(c)
+	})
+	r.GET("/about", func(c *gin.Context) {
 		handlers.NewAboutHandler().ServeHTTP(c)
 	})
 
@@ -96,7 +97,7 @@ func main() {
 	// }).ServeHTTP))
 
 	// r.Run("localhost:4000")
-	r.Run()
+	r.Run(cfg.Port)
 
 	// killSig := make(chan os.Signal, 1)
 
