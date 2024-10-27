@@ -5,6 +5,7 @@ import (
 	"goth/internal/handlers"
 	database "goth/internal/store/db"
 	"goth/internal/store/dbstore"
+
 	// "goth/internal/templates"
 	"os"
 
@@ -76,7 +77,12 @@ func main() {
 	r.GET("/about", func(c *gin.Context) {
 		handlers.NewAboutHandler().ServeHTTP(c)
 	})
-
+	r.GET("/products", func(c *gin.Context) {
+		handlers.NewProductsHandler().ServeHTTP(c)
+	})
+	r.POST("/checkout-session", func(c *gin.Context) {
+		handlers.NewCheckoutSessionHandler().ServeHTTP(c)
+	})
 	// r.NoRoute(gin.WrapF(handlers.NewNotFoundHandler().ServeHTTP))
 
 	// r.GET("/", gin.WrapF(handlers.NewHomeHandler().ServeHTTP))

@@ -199,7 +199,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-slate-600 p-4\"><div class=\"container mx-auto flex justify-between items-center\"><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/\">Home</a> <a class=\"text-white hover:text-gray-400\" href=\"/about\">About</a></div><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/register\">Register</a><!-- <a class=\"text-white hover:text-gray-400\" href=\"/login\">Login</a> --><div id=\"my-user\"></div></div></div></nav>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav class=\"bg-slate-600 p-4\"><div class=\"container mx-auto flex justify-between items-center\"><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/\">Home</a> <a class=\"text-white hover:text-gray-400\" href=\"/about\">About</a> <a class=\"text-white hover:text-gray-400\" href=\"/products\">Products</a></div><div class=\"flex space-x-4\"><a class=\"text-white hover:text-gray-400\" href=\"/register\">Register</a><!-- <a class=\"text-white hover:text-gray-400\" href=\"/login\">Login</a> --><div id=\"my-user\"></div></div></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
