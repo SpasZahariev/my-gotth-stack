@@ -83,6 +83,9 @@ func main() {
 	r.POST("/checkout-session", func(c *gin.Context) {
 		handlers.NewCheckoutSessionHandler().ServeHTTP(c)
 	})
+	r.GET("/successful-payment", func(c *gin.Context) {
+		handlers.NewSuccessfulPaymentHandler().ServeHTTP(c)
+	})
 	// r.NoRoute(gin.WrapF(handlers.NewNotFoundHandler().ServeHTTP))
 
 	// r.GET("/", gin.WrapF(handlers.NewHomeHandler().ServeHTTP))

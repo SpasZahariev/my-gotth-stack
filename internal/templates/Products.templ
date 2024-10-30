@@ -1,33 +1,13 @@
 package templates
 
 templ Products() {
-	<div class="w-full p-4">
-		<p class="font-mono text-2xl text-slate-100">
-			Stripe Products Page
-		</p>
+	<form action="/checkout-session" method="POST">
 		<button
 			id="checkout-button"
-			hx-post="/create-checkout-session"
-			hx-trigger="click"
-			hx-target="this"
-			hx-swap="none"
-			hx-on="htmx:afterRequest: redirectToCheckout(event)"
+			class="bg-black text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-800 transition duration-300"
+			type="submit"
 		>
 			Buy Hot Sauce
 		</button>
-	</div>
-	<script src="https://js.stripe.com/v3/"></script>
-	<script>
-  var stripe = Stripe('your-publishable-key');
-
-  function redirectToCheckout(event) {
-    var sessionId = event.detail.xhr.responseText;
-    stripe.redirectToCheckout({ sessionId: sessionId })
-      .then(function (result) {
-        if (result.error) {
-          alert(result.error.message);
-        }
-      });
-  }
-</script>
+	</form>
 }

@@ -58,10 +58,10 @@ func CSPMiddleware() gin.HandlerFunc {
 		// insert the nonces into the content security policy header
 		cspHeader := fmt.Sprintf(
 			"default-src 'self'; "+
-				"script-src 'nonce-%s' 'nonce-%s' 'nonce-%s' 'nonce-%s' https://modern-colt-57.clerk.accounts.dev https://img.clerk.com; "+
+				"script-src 'nonce-%s' 'nonce-%s' 'nonce-%s' 'nonce-%s' https://modern-colt-57.clerk.accounts.dev https://img.clerk.com 'unsafe-eval'; "+
 				// "style-src 'nonce-%s' '%s' 'unsafe-inline'; "+
 				"style-src 'self' 'unsafe-inline'; "+
-				"connect-src 'self' https://modern-colt-57.clerk.accounts.dev; worker-src 'self' blob:; "+
+				"connect-src 'self' https://modern-colt-57.clerk.accounts.dev https://checkout.stripe.com; worker-src 'self' blob:; "+
 				"img-src 'self' https://img.clerk.com;",
 			nonceSet.Htmx,
 			nonceSet.ResponseTargets,

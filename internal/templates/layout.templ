@@ -49,6 +49,22 @@ templ header(c *gin.Context, title string) {
         }
       })
     </script>
+		<!-- lets see if this gets loaded now -->
+		<script src="https://js.stripe.com/v3/"></script>
+		<script src="https://unpkg.com/htmx.org"></script>
+		<script>
+      var stripe = Stripe('pk_test_51Q4grxRpeqHokLUa2wH0SEDcnEnucm2c9sRNj32Y7Yf3tRZs2zByOfhLAz4gOOsvT6F3d0pMHLddd8vcEnJ2nyP000jCihuNTm');
+
+      function embedStripeCheckout(event) {
+        var sessionId = event.detail.xhr.responseText;
+        stripe.redirectToCheckout({ sessionId: sessionId })
+          .then(function (result) {
+            if (result.error) {
+              alert(result.error.message);
+            }
+          });
+      }
+    </script>
 	</head>
 }
 
